@@ -8,7 +8,7 @@
         </el-input>
       </el-form-item>
       <el-form-item prop="password">
-        <el-input type="text" v-model="loginForm.password" auto-complete="off" placeholder="请输入密码">
+        <el-input type="password" v-model="loginForm.password" auto-complete="off" placeholder="请输入密码">
         </el-input>
       </el-form-item>
       <el-checkbox v-model="checked" class="loginRemember">记住我</el-checkbox>
@@ -18,6 +18,8 @@
 </template>
 
 <script>
+import {postKeyValueRequest} from "@/utils/api";
+
 export default {
   name: "Login",
   data() {
@@ -38,7 +40,12 @@ export default {
       // alert("登录成功")
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          alert('submit!');
+          // alert('submit!');
+          postKeyValueRequest("/doLogin", this.loginForm).then(resp=>{
+            if (resp) {
+              alert(JSON.stringify(resp));
+            }
+          })
         } else {
           this.$message.error("请输入所有字段")
           return false;
@@ -51,6 +58,7 @@ export default {
 </script>
 
 <style>
+
   .loginContainer {
     border-radius: 15px;
     background-clip: padding-box;
@@ -71,4 +79,5 @@ export default {
     margin: 0px 0px 15px 0px;
 
   }
+
 </style>
