@@ -2,7 +2,7 @@
   <div>
     <!--定义校验规则-->
     <el-form :rules="rules" ref="loginForm" :model="loginForm" class="loginContainer">
-      <h3 class="loginTitle">系统登陆</h3>
+      <h3 class="loginTitle">Kyno</h3>
       <el-form-item prop="username">
         <el-input type="text" v-model="loginForm.username" auto-complete="off" placeholder="请输入用户名">
         </el-input>
@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import {postKeyValueRequest} from "@/utils/api";
+
 
 export default {
   name: "Login",
@@ -41,9 +41,13 @@ export default {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           // alert('submit!');
-          postKeyValueRequest("/doLogin", this.loginForm).then(resp=>{
+          this.postKeyValueRequest("/doLogin", this.loginForm).then(resp=>{
             if (resp) {
-              alert(JSON.stringify(resp));
+              // alert(JSON.stringify(resp));
+              // 保存登陆的信息
+              window.sessionStorage.setItem("user", JSON.stringify(resp.obj));
+              // 页面跳转 replace替换,不能点击后退按钮，push往栈里压，可以点击后退按钮
+              this.$router.replace('/home')
             }
           })
         } else {
@@ -77,7 +81,7 @@ export default {
   .loginRemember {
     text-align: left;
     margin: 0px 0px 15px 0px;
-
   }
+
 
 </style>
