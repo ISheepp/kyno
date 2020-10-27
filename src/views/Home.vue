@@ -16,11 +16,11 @@
       </el-header>
       <el-container>
         <el-aside width="200px">
-          <el-menu router>
-            <el-submenu index="1" v-for="(item,index) in this.$router.options.routes" v-if="!item.hidden" :key="index">
+          <el-menu router unique-opened>
+            <el-submenu :index="index + ''" v-for="(item,index) in routes" v-if="!item.hidden" :key="index">
                   <!--图标-->
               <template slot="title">
-                <i class="el-icon-location"></i>
+                <i :class="item.iconCls" style="margin-right: 3px"></i>
                 <span>{{ item.name }}</span>
               </template>
                 <el-menu-item :index="child.path" v-for="(child,indexj) in item.children" :key="indexj">{{ child.name }}</el-menu-item>
@@ -30,6 +30,15 @@
           </el-menu>
         </el-aside>
         <el-main>
+          <el-breadcrumb separator-class="el-icon-arrow-right" v-if="this.$router.currentRoute.path!='/home'">
+            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item>{{ this.$router.currentRoute.name }}</el-breadcrumb-item>
+
+          </el-breadcrumb>
+          <div class="homeWelcome" v-if="this.$router.currentRoute.path=='/home'">
+            欢迎来到Kyno
+          </div>
+          <!--将视图放在这里-->
           <router-view/>
         </el-main>
       </el-container>
@@ -46,6 +55,12 @@
           user: JSON.parse(window.sessionStorage.getItem("user"))
         }
       },
+      computed: {
+        routes() {
+          return this.$store.state.routes;
+
+        }
+      },
       methods: {
         commandHandler(cmd) {
           if (cmd=='logout') {
@@ -58,6 +73,7 @@
               // 清空登录数据
               window.sessionStorage.removeItem("user");
               this.$router.replace("/");
+              this.$store.commit('initRoutes', []) // 注销并去除store
             }).catch(() => {
               this.$message({
                 type: 'info',
@@ -96,6 +112,13 @@
     .el-dropdown-link {
       display: flex;
       align-items: center;
+    }
+    .homeWelcome {
+      text-align: center;
+      font-size: 30px;
+      font-family:华文行楷;
+      color: black;
+      padding-top: 50px;
     }
 
 </style>

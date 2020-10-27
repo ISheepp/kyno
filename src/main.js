@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
+import store from './store'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
@@ -9,6 +10,8 @@ import {postRequest} from "@/utils/api";
 import {putRequest} from "@/utils/api";
 import {getRequest} from "@/utils/api";
 import {deleteRequest} from "@/utils/api";
+import {initMenu} from "@/utils/menus";
+import 'font-awesome/css/font-awesome.min.css';
 
 // 做成插件
 Vue.prototype.postKeyValueRequest = postKeyValueRequest // 引用
@@ -18,10 +21,22 @@ Vue.prototype.getRequest = getRequest
 Vue.prototype.deleteRequest = deleteRequest
 
 Vue.use(ElementUI)
+// 前置导航守卫
+router.beforeEach((to, from, next) => {
+  // 继续执行的方法
+  // next();
+  if (to.path == '/') {
+    next();
+  } else {
+    initMenu(router, store);
+    next();
+  }
+})
 
 Vue.config.productionTip = false
 
 new Vue({
   router,
+  store,
   render: h => h(App)
 }).$mount('#app')
