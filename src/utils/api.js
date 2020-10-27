@@ -31,12 +31,12 @@ axios.interceptors.response.use(success=>{
         }
     }
     return;
-})
+});
 
 // 定义一个前缀
 let base = '';
 // spring security默认不支持json传值，默认为kv格式
-export const postKeyValueRequest=(url,params)=>{
+export const postKeyValueRequest = (url, params) => {
     return axios({
         method: 'post',
         url: `${base}${url}`,
@@ -53,7 +53,7 @@ export const postKeyValueRequest=(url,params)=>{
             'Content-Type': 'application/x-www-form-urlencoded'
         }
     });
-}
+};
 
 // 传递json的post方法
 export const postRequest = (url, params) => {

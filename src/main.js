@@ -14,13 +14,13 @@ import {initMenu} from "@/utils/menus";
 import 'font-awesome/css/font-awesome.min.css';
 
 // 做成插件
-Vue.prototype.postKeyValueRequest = postKeyValueRequest // 引用
-Vue.prototype.postRequest = postRequest
-Vue.prototype.putRequest = putRequest
-Vue.prototype.getRequest = getRequest
-Vue.prototype.deleteRequest = deleteRequest
+Vue.prototype.postKeyValueRequest = postKeyValueRequest; // 引用
+Vue.prototype.postRequest = postRequest;
+Vue.prototype.putRequest = putRequest;
+Vue.prototype.getRequest = getRequest;
+Vue.prototype.deleteRequest = deleteRequest;
 
-Vue.use(ElementUI)
+Vue.use(ElementUI);
 // 前置导航守卫
 router.beforeEach((to, from, next) => {
   // 继续执行的方法
@@ -31,12 +31,12 @@ router.beforeEach((to, from, next) => {
     initMenu(router, store);
     next();
   }
-})
+});
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 new Vue({
   router,
   store,
   render: h => h(App)
-}).$mount('#app')
+}).$mount('#app');
