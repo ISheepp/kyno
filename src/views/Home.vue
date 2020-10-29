@@ -39,7 +39,7 @@
             欢迎来到Kyno
           </div>
           <!--将视图放在这里-->
-          <router-view/>
+          <router-view class="homeRouterView"/>
         </el-main>
       </el-container>
     </el-container>
@@ -88,7 +88,7 @@
 <!--Brush Script MT-->
 <style>
     .homeHeader {
-      background-color: lightcoral;
+      background-color: #22a3ff;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -119,6 +119,9 @@
       font-family:华文行楷;
       color: black;
       padding-top: 50px;
+    }
+    .homeRouterView {
+      margin-top: 10px;
     }
 
 </style>

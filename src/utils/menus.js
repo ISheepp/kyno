@@ -1,8 +1,6 @@
 // 将后端获取到的菜单对象中的component字符串转为对象
 import {getRequest} from "@/utils/api";
 
-
-
 export const initMenu=(router, store)=>{
     // 用户的正常跳转（非F5刷新）
     if (store.state.routes.length > 0) {
@@ -39,6 +37,7 @@ export const formatRoutes = (routes) => {
             meta: meta,
             children: children,
             // 动态加载component
+            // TODO 收藏夹有
             component(resolve) {
                 if (component.startsWith("Home")) {
                     require(['../views/' + component + '.vue'], resolve);

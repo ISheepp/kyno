@@ -20,7 +20,10 @@ Vue.prototype.putRequest = putRequest;
 Vue.prototype.getRequest = getRequest;
 Vue.prototype.deleteRequest = deleteRequest;
 
+// 全局控制控件
+// Vue.use(ElementUI, {size: 'mini'});
 Vue.use(ElementUI);
+
 // 前置导航守卫
 router.beforeEach((to, from, next) => {
   // 继续执行的方法
@@ -28,8 +31,13 @@ router.beforeEach((to, from, next) => {
   if (to.path == '/') {
     next();
   } else {
-    initMenu(router, store);
-    next();
+    if (window.sessionStorage.getItem("user")){
+      initMenu(router, store);
+      next();
+    }else {
+      // next('/');
+      next('?redirect='+to.path)
+    }
   }
 });
 

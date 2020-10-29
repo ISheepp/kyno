@@ -41,15 +41,16 @@ export default {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           // alert('submit!');
-          this.postKeyValueRequest("/doLogin", this.loginForm).then(resp=>{
+          this.postKeyValueRequest("/doLogin", this.loginForm).then(resp => {
             if (resp) {
               // alert(JSON.stringify(resp));
               // 保存登陆的信息
               window.sessionStorage.setItem("user", JSON.stringify(resp.obj));
               // 页面跳转 replace替换,不能点击后退按钮，push往栈里压，可以点击后退按钮
-              this.$router.replace('/home')
+              let path = this.$route.query.redirect;
+              this.$router.replace((path =='/' || path == undefined) ? '/home' : path)
             }
-          })
+          });
         } else {
           this.$message.error("请输入所有字段")
           return false;
