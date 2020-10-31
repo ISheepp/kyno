@@ -13,9 +13,9 @@
           style="width: 250px;margin-right: 9px"
           placeholder="请输入角色中文名称..."
           v-model="role.nameZh"
-          clearable>
+          clearable @keydown.enter.native="doAddRole">
       </el-input>
-      <el-button icon="el-icon-plus" size="small" type="primary">添加角色</el-button>
+      <el-button icon="el-icon-plus" size="small" type="primary" @click="doAddRole">添加角色</el-button>
     </div>
 
     <div style="margin-top: 13px;width: 800px">
@@ -24,10 +24,12 @@
           <el-card class="box-card">
             <div slot="header" class="clearfix">
               <span>可访问的资源</span>
-              <el-button style="float: right; padding: 3px 0; color: #ff0000" icon="el-icon-delete" type="text"></el-button>
+              <el-button style="float: right; padding: 3px 0; color: #ff0000" icon="el-icon-delete" type="text" @click="deleteRole(r)"></el-button>
             </div>
             <div>
+              <!-- :key 是为了区分每一个tree-->
               <el-tree
+                  :key="index"
                   :data="menus"
                   ref="tree"
                   :props="defaultProps"
@@ -70,6 +72,37 @@ export default {
     this.initRoles();
   },
   methods: {
+    deleteRole(role) {
+      this.$confirm('此操作将永久删除【'+role.nameZh+'】角色, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.deleteRequest("/system/basic/permiss/role/"+role.id).then(resp => {
+          if (resp) {
+            this.initRoles();
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
+    },
+    doAddRole() {
+      if (this.role.name && this.role.nameZh){
+        this.postRequest("/system/basic/permiss/role", this.role).then(resp => {
+          if (resp) {
+            this.role.name = '';
+            this.role.nameZh = '';
+            this.initRoles();
+          }
+        })
+      }else {
+        this.$message.error('数据不可以为空');
+      }
+    },
     cancelUpdate() {
       this.activeName = -1;
     },
@@ -84,7 +117,7 @@ export default {
       });
       this.putRequest(url).then(resp => {
         if (resp) {
-          this.initRoles();
+          // this.initRoles(); 不需刷新，直接关闭面板
           this.activeName = -1;
         }
       })

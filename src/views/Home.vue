@@ -58,7 +58,6 @@
       computed: {
         routes() {
           return this.$store.state.routes;
-
         }
       },
       methods: {
