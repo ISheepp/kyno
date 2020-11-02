@@ -69,6 +69,11 @@
               type: 'warning'
             }).then(() => {
               this.getRequest("/logout");
+              const h = this.$createElement;
+              this.$notify({
+                title: 'Message',
+                message: h('i', { style: 'color: teal'}, '注销成功😜')
+              });
               // 清空登录数据
               window.sessionStorage.removeItem("user");
               this.$router.replace("/");

@@ -1,7 +1,15 @@
 <template>
   <div>
     <!--定义校验规则-->
-    <el-form :rules="rules" ref="loginForm" :model="loginForm" class="loginContainer">
+    <el-form
+        :rules="rules"
+        ref="loginForm"
+        :model="loginForm"
+        class="loginContainer"
+        v-loading="loading"
+        element-loading-text="正在登陆..."
+        element-loading-spinner="el-icon-loading"
+        element-loading-background="rgba(0, 0, 0, 0.8)">
       <h3 class="loginTitle">Kyno</h3>
       <el-form-item prop="username">
         <el-input type="text" v-model="loginForm.username" auto-complete="off" placeholder="请输入用户名">
@@ -24,25 +32,33 @@ export default {
   name: "Login",
   data() {
     return {
+      loading: false,
       loginForm: {
-        username:'admin',
+        username: 'admin',
         password: '123'
       },
       checked: true,
       rules: {
-        username: [{required:true, message: '请输入用户名', trigger: 'blur'}],
+        username: [{required: true, message: '请输入用户名', trigger: 'blur'}],
         password: [{required: true, message: '请输入密码', trigger: 'blur'}]
       }
-    }
+    };
   },
   methods: {
     submitLogin() {
       // alert("登录成功")
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
+          this.loading = true;
           // alert('submit!');
           this.postKeyValueRequest("/doLogin", this.loginForm).then(resp => {
+            this.loading = false;
             if (resp) {
+              const h = this.$createElement;
+              this.$notify({
+                title: 'Message',
+                message: h('i', { style: 'color: teal'}, '登陆成功😁')
+              });
               // alert(JSON.stringify(resp));
               // 保存登陆的信息
               window.sessionStorage.setItem("user", JSON.stringify(resp.obj));
