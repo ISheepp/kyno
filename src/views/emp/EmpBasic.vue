@@ -11,11 +11,23 @@
           高级搜索</el-button>
       </div>
       <div>
-        <el-button type="success" size="small">
-          <i class="fa fa-level-up" aria-hidden="true"></i>
-          导入数据</el-button>
-        <el-button type="success" size="small">
-          <i class="fa fa-level-down" aria-hidden="true"></i>
+        <el-upload
+            style="display: inline-flex;margin-right: 8px"
+            :before-upload="beforeUpload"
+            :on-success="onSuccess"
+            :on-error="onError"
+            :disabled="importDataDisabled"
+            class="upload-demo"
+            :show-file-list="false"
+            action="/employee/basic/import"
+            >
+          <el-button :disabled="importDataDisabled" type="success" size="small" :icon="importDataBtnIcon">
+
+            {{importDataBtnText}}</el-button>
+        </el-upload>
+
+        <el-button type="success" size="small" @click="exportData" icon="el-icon-download">
+
           导出数据</el-button>
         <el-button type="primary" icon="el-icon-plus" size="small" @click="showAddEmpView">
           添加用户</el-button>
@@ -46,6 +58,12 @@
         <el-table-column
             prop="workID"
             label="工号"
+            align="left"
+            width="85">
+        </el-table-column>
+        <el-table-column
+            prop="gender"
+            label="性别"
             align="left"
             width="85">
         </el-table-column>
@@ -121,6 +139,24 @@
             label="聘用形式">
         </el-table-column>
         <el-table-column
+            prop="tiptopDegree"
+            width="80"
+            align="left"
+            label="最高学历">
+        </el-table-column>
+        <el-table-column
+            prop="specialty"
+            width="150"
+            align="left"
+            label="专业">
+        </el-table-column>
+        <el-table-column
+            prop="school"
+            width="150"
+            align="left"
+            label="毕业院校">
+        </el-table-column>
+        <el-table-column
             prop="beginDate"
             width="90"
             align="left"
@@ -152,10 +188,6 @@
           <el-tag size="mini">{{scope.row.contractTerm}}</el-tag>年
         </template>
 
-        </el-table-column>
-        <el-table-column
-            prop="tiptopDegree"
-            label="最高学历">
         </el-table-column>
         <el-table-column
             fixed="right"
@@ -422,6 +454,9 @@ export default {
   name: "EmpBasic",
   data() {
     return {
+      importDataBtnText: '导入数据',
+      importDataBtnIcon: 'el-icon-upload2',
+      importDataDisabled: false,
       title: '',
       rules: {
         name: [{required: true, message: '请输入姓名', trigger: 'blur'}],
@@ -486,7 +521,7 @@ export default {
         specialty: "",
         school: "",
         beginDate: "",
-        workState: "",
+        workState: null,
         workID: "",
         contractTerm: 3.0,
         conversionTime: "",
@@ -509,6 +544,25 @@ export default {
     this.initData();
   },
   methods: {
+    onError(err, file, fileList) {
+      this.importDataBtnText = '导入数据';
+      this.importDataBtnIcon = 'el-icon-upload2';
+      this.importDataDisabled = false;
+    },
+    onSuccess(response, file, fileList) {
+      this.importDataBtnText = '导入数据';
+      this.importDataBtnIcon = 'el-icon-upload2';
+      this.importDataDisabled = false;
+      this.initEmps();
+    },
+    beforeUpload() {
+      this.importDataBtnText = '正在导入';
+      this.importDataBtnIcon = 'el-icon-loading';
+      this.importDataDisabled = true;
+    },
+    exportData() {
+      window.open('/employee/basic/export', '_parent');
+    },
     emptyEmp() {
       this.emp = {
         name: "",
@@ -530,7 +584,7 @@ export default {
             specialty: "",
             school: "",
             beginDate: "",
-            workState: "",
+            workState: null,
             workID: "",
             contractTerm: 3.0,
             conversionTime: "",
